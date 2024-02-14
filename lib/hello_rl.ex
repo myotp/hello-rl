@@ -1,18 +1,19 @@
 defmodule HelloRl do
-  @moduledoc """
-  Documentation for `HelloRl`.
-  """
+  alias Core.Environment
+  alias Core.Agent
 
-  @doc """
-  Hello world.
+  def run() do
+    env = Environment.new()
+    agent = Agent.new()
+    run(env, agent)
+  end
 
-  ## Examples
-
-      iex> HelloRl.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  defp run(env, agent) do
+    if Environment.is_done(env) do
+      IO.puts("Total reward got: #{agent.total_reward}")
+    else
+      {:ok, updated_agent, updated_env} = Agent.step(agent, env)
+      run(updated_env, updated_agent)
+    end
   end
 end
